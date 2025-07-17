@@ -25,9 +25,17 @@ export const UserService = {
     }
   },
 
-  async getMenuActions() {
+  async getRoleActions() {
     const data = localStorage.getItem('authProfile')
     return (JSON.parse(data).data.role.rol_actions).map(r_a => r_a.action.key)
+  },
+
+  async getAdminOrRoleActions(keyAction) {
+    const role = (await this.getUserRol()).toLowerCase();
+    if(role === 'admin') return true;
+    let data = localStorage.getItem('authProfile')
+    data = (JSON.parse(data).data.role.rol_actions).map(r_a => r_a.action.key);
+    return data.includes(keyAction)
   },
 
   async getUserRol(){
@@ -38,13 +46,14 @@ export const UserService = {
   async validateMenu(menu) {
     let actionList = null;
     const role = (await this.getUserRol()).toLowerCase();
-    if(role!== 'admin') { actionList = await this.getMenuActions();}
+    if(role!== 'admin') { actionList = await this.getRoleActions();}
 
     const validateItem = (item) => {
       if(role === 'admin') {
         item.visible = true; // Admin role has access to all items
         return;
       }
+     
       if (item.key && !item.children && actionList.includes(item.key)) {
         item.visible = true;
       } else {

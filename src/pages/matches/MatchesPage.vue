@@ -69,6 +69,7 @@
             <!-- Botones de acción -->
             <div class="row q-gutter-xs items-center">
               <q-btn
+                v-if="canAddMatch"
                 color="blue"
                 icon="event"
                 round
@@ -79,6 +80,7 @@
                 <q-tooltip>Agregar Partido Programado</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="showNone"
                 color="primary"
                 icon="add"
                 round
@@ -107,9 +109,9 @@
               </q-card-section>
               <q-separator />
               <q-card-actions align="around">
-                <q-btn flat round icon="edit" @click="openEditMatchDialog(props.row)" />
-                <q-btn flat round icon="delete" @click="confirmDeleteMatch(props.row)" />
-                <q-btn v-if="props.row.status === 'scheduled'" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
+                <q-btn v-if="showNone" flat round icon="edit" @click="openEditMatchDialog(props.row)" />
+                <q-btn v-if="showNone" flat round icon="delete" @click="confirmDeleteMatch(props.row)" />
+                <q-btn v-if="props.row.status === 'scheduled' && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
                   <q-tooltip>Register Result</q-tooltip>
                 </q-btn>
               </q-card-actions>
@@ -157,9 +159,9 @@
               {{ props.row.stadium.name }}
             </q-td>
             <q-td key="actions" :props="props">
-              <q-btn dense round flat icon="edit" @click="openEditMatchDialog(props.row)"></q-btn>
-              <q-btn dense round flat icon="delete" @click="confirmDeleteMatch(props.row)"></q-btn>
-              <q-btn v-if="props.row.status === 'scheduled'" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
+              <q-btn v-if="showNone" dense round flat icon="edit" @click="openEditMatchDialog(props.row)"></q-btn>
+              <q-btn v-if="showNone ||props.row.status === 'scheduled'" dense round flat icon="delete" @click="confirmDeleteMatch(props.row)"></q-btn>
+              <q-btn v-if="props.row.status === 'scheduled' && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
                 <q-tooltip>Register Result</q-tooltip>
               </q-btn>
             </q-td>
@@ -557,6 +559,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { MatchService } from 'src/services/MatchService'
+import { UserService } from 'src/services/UserService'
 import { useQuasar } from 'quasar'
 import { format } from 'date-fns'
 
@@ -580,6 +583,10 @@ const pagination = ref({ rowsPerPage: 0, page: 1 }) // rowsPerPage: 0 means show
 const selectedSeason = ref(null)
 const selectedRound = ref(null)
 const selectedTeam = ref(null)
+
+const canAddMatch = ref(false)
+const canRegisterMatch = ref(false)
+const showNone = ref(false)
 
 const roundOptions = computed(() => {
   const rounds = [...new Set(matches.value.map(match => match.round))].sort((a, b) => b - a)
@@ -860,12 +867,12 @@ const openAddMatchDialog = () => {
 }
 
 const openAddScheduledMatchDialog = () => {
-  dialogMode.value = 'schedule'
-  resetForm()
-  matchForm.value.status = 'scheduled'
-  filteredHomeTeams.value = teams.value
-  filteredAwayTeams.value = teams.value
-  matchDialog.value = true
+    dialogMode.value = 'schedule'
+    resetForm()
+    matchForm.value.status = 'scheduled'
+    filteredHomeTeams.value = teams.value
+    filteredAwayTeams.value = teams.value
+    matchDialog.value = true
 }
 
 const openEditMatchDialog = (match) => {
@@ -980,9 +987,25 @@ const confirmDeleteMatch = (match) => {
   })
 }
 
+const checkAddMatchPermission = async () => {
+  try {
+    canAddMatch.value = await UserService.getAdminOrRoleActions('match_btn_add_match')
+    canRegisterMatch.value = await UserService.getAdminOrRoleActions('match_btn_res')
+    showNone.value = await UserService.getAdminOrRoleActions('__none__')
+    console.log(canAddMatch.value)
+    console.log(showNone.value)
+  } catch (error) {
+    console.error('Error checking add match permission:', error)
+    canAddMatch.value = false
+    showNone.value = false
+    canRegisterMatch.value = false
+  }
+}
+
 onMounted(() => {
   fetchMatches()
   fetchDropdownData()
+  checkAddMatchPermission()
 })
 </script>
 <style scoped>
@@ -994,40 +1017,60 @@ onMounted(() => {
   background-color: #fff3e0; /* Light Orange */
   border-radius: 4px;
 }
-.q-table__title {
-    font-size: 1.5rem;
-    font-weight: 500;
+
+/* Estilos para modo dark */
+.body--dark .winner-highlight {
+  background-color: #388e3c; /* Darker Green */
+  color: #fff;
+}
+.body--dark .draw-highlight {
+  background-color: #8d6e63; /* Brownish for draw */
+  color: #fff;
 }
 
-/* Estilos para los filtros y botones */
-.filter-select {
-  transition: all 0.3s ease;
+/* Headers de grupo adaptables al tema */
+.q-table tbody tr td.bg-grey-2 {
+  font-weight: bold;
+  padding: 8px 16px;
+}
+.body--dark .q-table tbody tr td.bg-grey-2 {
+  background-color: #424242 !important;
+  color: #fff !important;
+  border-bottom: 1px solid #616161;
 }
 
-.filter-select:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* Mejorar contraste en modo dark para los badges de status */
+.body--dark .q-badge {
+  color: #fff !important;
 }
 
-/* Mejorar apariencia de los botones de acción */
-.q-btn {
-  transition: all 0.2s;
+/* Estilos para el filtro en modo dark */
+.body--dark .q-select {
+  background-color: #424242;
+}
+.body--dark .q-select .q-field__control {
+  background-color: #424242;
+  color: #fff;
 }
 
-.q-btn:hover {
-  transform: scale(1.1);
+/* Asegurar que los iconos sean visibles en modo dark */
+.body--dark .q-icon {
+  color: #fff;
 }
 
-/* Separador vertical más visible */
-.q-separator.vertical {
-  height: 40px;
-  margin: 0 16px;
-}
-
-/* Espaciado mejorado para el contenedor principal */
-.q-table__top {
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #f5fa 0%, #c3cfe2 100%);
-  border-radius: 8px 0 0;
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .q-table__title {
+    font-size: 1.2rem;
+  }
+  .q-card {
+    margin-bottom: 8px;
+  }
+  .text-h6 {
+    font-size: 1rem;
+  }
+  .text-h5 {
+    font-size: 1.2rem;
+  }
 }
 </style> 

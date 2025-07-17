@@ -93,8 +93,35 @@
         </template>
         <template v-slot:body="props">
           <q-tr :class="positionClass(props.rowIndex)">
-            <q-td v-for="col in columns" :key="col.name" :props="props">
-              {{ props.row[col.field || col.name] }}
+            <q-td key="position" :props="props">
+              {{ props.rowIndex + 1 }}
+            </q-td>
+            <q-td key="teamName" :props="props">
+              {{ props.row.teamName }}
+            </q-td>
+            <q-td key="played" :props="props" align="center">
+              {{ props.row.played }}
+            </q-td>
+            <q-td key="won" :props="props" align="center">
+              {{ props.row.won }}
+            </q-td>
+            <q-td key="drawn" :props="props" align="center">
+              {{ props.row.drawn }}
+            </q-td>
+            <q-td key="lost" :props="props" align="center">
+              {{ props.row.lost }}
+            </q-td>
+            <q-td key="goalsFor" :props="props" align="center">
+              {{ props.row.goalsFor }}
+            </q-td>
+            <q-td key="goalsAgainst" :props="props" align="center">
+              {{ props.row.goalsAgainst }}
+            </q-td>
+            <q-td key="goalDifference" :props="props" align="center">
+              {{ props.row.goalDifference }}
+            </q-td>
+            <q-td key="points" :props="props" align="center">
+              {{ props.row.points }}
             </q-td>
           </q-tr>
         </template>
@@ -197,5 +224,57 @@ onMounted(() => {
 }
 .posicion-roja {
   background-color: #ffebee !important;
+}
+
+/* Dark mode para posiciones destacadas */
+.body--dark .posicion-verde {
+  background-color: #388e3c !important;
+  color: #fff;
+}
+.body--dark .posicion-roja {
+  background-color: #b71c1c !important;
+  color: #fff;
+}
+
+/* Banner y tabla adaptables al tema */
+.q-banner.bg-grey-2 {
+  background-color: #f5f5f5;
+  color: #333;
+}
+.body--dark .q-banner.bg-grey-2 {
+  background-color: #424242 !important;
+  color: #fff !important;
+}
+
+/* Mejorar contraste de chips en dark mode */
+.body--dark .q-chip {
+  color: #fff !important;
+}
+
+/* Mejorar contraste de headers de tabla en dark mode */
+.body--dark .q-table thead tr th {
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+/* Mejorar contraste de celdas en dark mode */
+.body--dark .q-table tbody tr td {
+  color: #fff;
+}
+
+/* Responsividad para cards y tabla */
+@media (max-width: 768px) {
+  .q-table__title {
+    font-size: 1.2rem;
+  }
+  .q-card {
+    margin-bottom: 8px;
+  }
+  .text-h6 {
+    font-size: 1rem;
+  }
+  .text-h5 {
+    font-size: 1.2rem;
+  }
 }
 </style> 

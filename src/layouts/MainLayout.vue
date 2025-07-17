@@ -71,7 +71,7 @@
               </q-item>
             </q-list>
           </q-expansion-item>
-          <q-item v-else>
+          <q-item v-else :to="link.link">
             <q-item-section avatar>
               <q-icon :name="link.icon" />
             </q-item-section>
@@ -103,7 +103,9 @@ onMounted(async () => {
   const response = await fetch('/src/layouts/menu.json')
   let links = await response.json()
   links = await UserService.validateMenu(links)
-  console.log(links)
+  links.forEach(link => {
+    link.children = link?.children?.filter(child => child.visible !== false)
+  })
   filteredLinksList.value = links.filter(link => link.visible !== false)
 })
 

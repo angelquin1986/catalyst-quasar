@@ -220,22 +220,60 @@ onMounted(async () => {
   background-color: #fff3e0; /* Light Orange */
   border-radius: 4px;
 }
+
+/* Estilos para modo dark */
+.body--dark .winner-highlight {
+  background-color: #388e3c; /* Darker Green */
+  color: #fff;
+}
+.body--dark .draw-highlight {
+  background-color: #8d6e63; /* Brownish for draw */
+  color: #fff;
+}
+
+/* Headers de grupo adaptables al tema */
+.q-table tbody tr td.bg-grey-2 {
+  font-weight: bold;
+  padding: 8px 16px;
+}
+.body--dark .q-table tbody tr td.bg-grey-2 {
+  background-color: #424242 !important;
+  color: #fff !important;
+  border-bottom: 1px solid #616161;
+}
+
+/* Mejorar contraste en modo dark para los badges de status */
+.body--dark .q-badge {
+  color: #fff !important;
+}
+
+/* Estilos para el filtro en modo dark */
+.body--dark .q-select {
+  background-color: #424242;
+}
+.body--dark .q-select .q-field__control {
+  background-color: #424242;
+  color: #fff;
+}
+
+/* Asegurar que los iconos sean visibles en modo dark */
+.body--dark .q-icon {
+  color: #fff;
+}
+
 /* Estilos responsivos */
 @media (max-width: 768px) {
   .q-table__title {
-    font-size: 10.2px;
+    font-size: 1.2rem;
   }
-  
   .q-card {
     margin-bottom: 8px;
   }
-  
   .text-h6 {
     font-size: 1rem;
   }
-  
   .text-h5 {
     font-size: 1.2rem;
   }
 }
-</style>
+</style> 

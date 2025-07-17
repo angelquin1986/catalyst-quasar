@@ -24,7 +24,10 @@
         "icon": "sports_soccer",
         "link": "/matches",
         "key": "m_matches"
-      },
+      }
+    ]
+  }
+  ,
       {
         "title": "Leaderboard",
         "caption": "Season standings",
@@ -38,9 +41,7 @@
         "icon": "event",
         "link": "/calendar",
         "key": "m_calendar"
-      }
-    ]
-  },
+      },
   {
     "title": "Products",
     "caption": "github.com/quasarframework",

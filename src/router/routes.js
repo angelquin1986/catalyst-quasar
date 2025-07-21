@@ -7,7 +7,9 @@ const routes = [
       { path: '/SystemMaintenance', component: () => import('pages/settings/system/SystemMaintenance.vue') },
       { path: '/matches', component: () => import('pages/matches/MatchesPage.vue') },
       { path: '/leaderboard', component: () => import('pages/leaderboard/LeaderboardPage.vue') },
-      { path: '/calendar', component: () => import('pages/calendar/CalendarPage.vue') }
+      { path: '/calendar', component: () => import('pages/calendar/CalendarPage.vue') },
+      { path: '/teams', component: () => import('pages/teams/TeamsPage.vue') },
+      { path: '/teams/:teamId/players', component: () => import('pages/teams/TeamPlayersPage.vue') }
     ]
   },
 

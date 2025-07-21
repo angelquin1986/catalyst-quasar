@@ -26,35 +26,35 @@
         "key": "m_matches"
       }
     ]
-  }
-  ,
+  },
+  {
+    "title": "Leaderboard",
+    "caption": "Season standings",
+    "icon": "leaderboard",
+    "link": "/leaderboard",
+    "key": "m_leaderboard"
+  },
+  
       {
-        "title": "Leaderboard",
-        "caption": "Season standings",
-        "icon": "leaderboard",
-        "link": "/leaderboard",
-        "key": "m_leaderboard"
+        "title": "Equipos",
+        "caption": "Administrar equipos",
+        "icon": "sports_soccer",
+        "link": "/teams",
+        "key": "m_teams"
       },
-      {
-        "title": "Calendar",
-        "caption": "Scheduled matches",
-        "icon": "event",
-        "link": "/calendar",
-        "key": "m_calendar"
-      },
+  {
+    "title": "Calendar",
+    "caption": "Scheduled matches",
+    "icon": "event",
+    "link": "/calendar",
+    "key": "m_calendar"
+  },
   {
     "title": "Products",
     "caption": "github.com/quasarframework",
     "icon": "code",
     "link": "https://github.com/quasarframework",
     "key": "m_products"
-  },
-  {
-    "title": "Players",
-    "caption": "github.com/quasarframework",
-    "icon": "boy",
-    "link": "https://github.com/quasarframework",
-    "key": "m_players"
   },
   {
     "title": "Ligas",

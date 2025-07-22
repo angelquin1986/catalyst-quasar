@@ -5,7 +5,7 @@
         flat
         bordered
         separator="cell"
-        title="Matches"
+        :title="$t('matches.title')"
         :rows="groupedRows"
         :columns="columns"
         row-key="id"
@@ -18,11 +18,11 @@
           <div class="row q-gutter-md items-center justify-end">
             <!-- Filtros -->
             <div class="row q-gutter-sm items-center">
-              <div class="text-subtitle2 text-grey-7 q-mr-sm">Filtros:</div>
+              <div class="text-subtitle2 text-grey-7 q-mr-sm">{{$t('matches.filters')}}:</div>
               <q-select
                 v-model="selectedSeason"
                 :options="seasons"
-                label="Temporada"
+                :label="$t('matches.season')"
                 option-value="id"
                 option-label="name"
                 emit-value
@@ -36,7 +36,7 @@
               <q-select
                 v-model="selectedRound"
                 :options="roundOptions"
-                label="Ronda"
+                :label="$t('matches.round')"
                 emit-value
                 map-options
                 clearable
@@ -48,7 +48,7 @@
               <q-select
                 v-model="selectedTeam"
                 :options="filteredTeamsForFilter"
-                label="Equipo"
+                :label="$t('matches.team')"
                 option-value="id"
                 option-label="name"
                 emit-value
@@ -77,7 +77,7 @@
                 flat
                 @click="openAddScheduledMatchDialog"
               >
-                <q-tooltip>Agregar Partido Programado</q-tooltip>
+                <q-tooltip>{{$t('matches.add_scheduled_match')}}</q-tooltip>
               </q-btn>
               <q-btn
                 v-if="showNone"
@@ -88,7 +88,7 @@
                 flat
                 @click="openAddMatchDialog"
               >
-                <q-tooltip>Agregar Partido</q-tooltip>
+                <q-tooltip>{{$t('matches.add_match')}}</q-tooltip>
               </q-btn>
             </div>
           </div>
@@ -98,8 +98,8 @@
           <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4">
             <q-card bordered flat>
               <q-card-section class="text-center">
-                <div class="text-grey-8">{{ format(new Date(props.row.date), 'dd/MM/yyyy') }}{{ props.row.hour ? ` ${props.row.hour}:00` : '' }} - {{ props.row.season.name }}</div>
-                <div class="text-grey-8">Round: {{ props.row.round }} | Status: <span class="text-bold">{{ props.row.status }}</span></div>
+                <div class="text-grey-8">{{$t('matches.date')}}: {{ format(new Date(props.row.date), 'dd/MM/yyyy') }}{{ props.row.hour ? ` ${props.row.hour}:00` : '' }} - {{ props.row.season.name }}</div>
+                <div class="text-grey-8">{{$t('matches.round')}}: {{ props.row.round }} | {{$t('matches.status')}}: <span class="text-bold">{{ props.row.status }}</span></div>
                 <div class="text-h6 q-mt-sm">{{ props.row.home_team.name }} vs {{ props.row.away_team.name }}</div>
                 <div class="text-h5 q-my-sm">
                   <span :class="{'text-bold winner-highlight': props.row.home_team_score > props.row.away_team_score, 'draw-highlight': props.row.home_team_score === props.row.away_team_score}">{{ props.row.home_team_score }}</span>
@@ -112,7 +112,7 @@
                 <q-btn v-if="showNone" flat round icon="edit" @click="openEditMatchDialog(props.row)" />
                 <q-btn v-if="showNone" flat round icon="delete" @click="confirmDeleteMatch(props.row)" />
                 <q-btn v-if="props.row.status === 'scheduled' && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
-                  <q-tooltip>Register Result</q-tooltip>
+                  <q-tooltip>{{$t('matches.register_result')}}</q-tooltip>
                 </q-btn>
               </q-card-actions>
             </q-card>
@@ -122,7 +122,7 @@
         <template v-slot:body="props">
           <q-tr v-if="props.row.isGroupHeader">
             <q-td :colspan="columns.length + 1" class="text-left bg-grey-2 text-bold q-py-sm">
-              <q-icon name="sports_soccer" class="q-mr-sm" />Round {{ props.row.round }}
+              <q-icon name="sports_soccer" class="q-mr-sm" />{{$t('matches.round')}} {{ props.row.round }}
             </q-td>
           </q-tr>
           <q-tr v-else :props="props">
@@ -162,7 +162,7 @@
               <q-btn v-if="showNone" dense round flat icon="edit" @click="openEditMatchDialog(props.row)"></q-btn>
               <q-btn v-if="showNone ||props.row.status === 'scheduled'" dense round flat icon="delete" @click="confirmDeleteMatch(props.row)"></q-btn>
               <q-btn v-if="props.row.status === 'scheduled' && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
-                <q-tooltip>Register Result</q-tooltip>
+                <q-tooltip>{{$t('matches.register_result')}}</q-tooltip>
               </q-btn>
             </q-td>
           </q-tr>
@@ -174,7 +174,7 @@
     <q-dialog v-model="matchDialog" persistent>
       <q-card style="min-width: 400px">
         <q-card-section>
-          <div class="text-h6">{{ dialogTitle }}</div>
+          <div class="text-h6">{{$t('matches.dialog_title', { mode: dialogMode })}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -185,7 +185,7 @@
                 <q-input
                   filled
                   v-model="matchForm.date"
-                  label="Match Date"
+                  :label="$t('matches.match_date')"
                   mask="date"
                   :rules="['date']"
                 >
@@ -198,7 +198,7 @@
                       >
                         <q-date v-model="matchForm.date">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" />
+                            <q-btn v-close-popup :label="$t('app.close')" color="primary" />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -210,13 +210,13 @@
                 <q-input
                   filled
                   v-model="matchForm.hour"
-                  label="Match Hour (1-24)"
+                  :label="$t('matches.match_hour')"
                   type="number"
                   min="1"
                   max="24"
                   :rules="[
-                    val => val !== null && val !== '' && val !== undefined || 'Hour is required',
-                    val => val >=1 && val <= 24 || 'Hour must be between 1 and 24'
+                    val => val !== null && val !== '' && val !== undefined || $t('validation.required'),
+                    val => val >=1 && val <= 24 || $t('matches.hour_range')
                   ]"
                 >
                 </q-input>
@@ -225,35 +225,35 @@
                 <q-select
                   v-model="matchForm.season_id"
                   :options="seasons"
-                  label="Season"
+                  :label="$t('matches.season')"
                   option-value="id"
                   option-label="name"
                   emit-value
                   map-options
                   filled
                   lazy-rules
-                  :rules="[val => !!val || 'Season is required']"
+                  :rules="[val => !!val || $t('validation.season_required')]"
                 />
               </div>
               <div class="col-6">
                 <q-select
                   v-model="matchForm.stadium_id"
                   :options="stadiums"
-                  label="Stadium"
+                  :label="$t('matches.stadium')"
                   option-value="id"
                   option-label="name"
                   emit-value
                   map-options
                   filled
                   lazy-rules
-                  :rules="[val => !!val || 'Stadium is required']"
+                  :rules="[val => !!val || $t('validation.stadium_required')]"
                 />
               </div>
               <div class="col-6">
                 <q-select
                   v-model="matchForm.home_team_id"
                   :options="filteredHomeTeams"
-                  label="Home Team"
+                  :label="$t('matches.home_team')"
                   option-value="id"
                   option-label="name"
                   emit-value
@@ -263,12 +263,12 @@
                   input-debounce="0"
                   @filter="filterHomeTeams"
                   lazy-rules
-                  :rules="[val => !!val || 'Home team is required']"
+                  :rules="[val => !!val || $t('validation.home_team_required')]"
                 >
                   <template v-slot:no-option>
                     <q-item>
                       <q-item-section class="text-grey">
-                        No results found
+                        {{$t('matches.no_results')}}
                       </q-item-section>
                     </q-item>
                   </template>
@@ -278,7 +278,7 @@
                 <q-select
                   v-model="matchForm.away_team_id"
                   :options="filteredAwayTeams"
-                  label="Away Team"
+                  :label="$t('matches.away_team')"
                   option-value="id"
                   option-label="name"
                   emit-value
@@ -289,14 +289,14 @@
                   @filter="filterAwayTeams"
                   lazy-rules
                   :rules="[
-                    val => !!val || 'Away team is required',
-                    val => val !== matchForm.home_team_id || 'Away team must be different from home team'
+                    val => !!val || $t('validation.away_team_required'),
+                    val => val !== matchForm.home_team_id || $t('matches.away_team_different')
                   ]"
                 >
                   <template v-slot:no-option>
                     <q-item>
                       <q-item-section class="text-grey">
-                        No results found
+                        {{$t('matches.no_results')}}
                       </q-item-section>
                     </q-item>
                   </template>
@@ -306,10 +306,10 @@
                 <q-input
                   v-model.number="matchForm.round"
                   type="number"
-                  label="Round"
+                  :label="$t('matches.round')"
                   filled
                   lazy-rules
-                  :rules="[val => val !== null && val > 0 || 'Round is required']"
+                  :rules="[val => val !== null && val > 0 || $t('validation.round_required')]"
                 />
               </div>
             </div>
@@ -320,7 +320,7 @@
                 v-if="dialogMode !== 'result'"
                 filled
                 v-model="matchForm.date"
-                label="Match Date"
+                :label="$t('matches.match_date')"
                 mask="date"
                 :rules="['date']"
               >
@@ -333,7 +333,7 @@
                     >
                       <q-date v-model="matchForm.date">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" />
+                          <q-btn v-close-popup :label="$t('app.close')" color="primary" />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -344,37 +344,37 @@
                 v-if="dialogMode !== 'result'"
                 filled
                 v-model="matchForm.hour"
-                label="Match Hour (1-24)"
+                :label="$t('matches.match_hour')"
                 type="number"
                 min="1"
                 max="24"
-                :rules="[val => val >=1 && val <= 24 || 'Hour must be between 1 and 24']"
+                :rules="[val => val >=1 && val <= 24 || $t('matches.hour_range')]"
               />
               <q-select
                 v-if="dialogMode !== 'result'"
                 v-model="matchForm.season_id"
                 :options="seasons"
-                label="Season"
+                :label="$t('matches.season')"
                 option-value="id"
                 option-label="name"
                 emit-value
                 map-options
                 filled
                 lazy-rules
-                :rules="[val => !!val || 'Season is required']"
+                :rules="[val => !!val || $t('validation.season_required')]"
               />
               <q-select
                 v-if="dialogMode !== 'result'"
                 v-model="matchForm.stadium_id"
                 :options="stadiums"
-                label="Stadium"
+                :label="$t('matches.stadium')"
                 option-value="id"
                 option-label="name"
                 emit-value
                 map-options
                 filled
                 lazy-rules
-                :rules="[val => !!val || 'Stadium is required']"
+                :rules="[val => !!val || $t('validation.stadium_required')]"
               />
 
               <!-- Home/Away Teams & Scores -->
@@ -387,7 +387,7 @@
                     <q-select
                       v-model="matchForm.home_team_id"
                       :options="filteredHomeTeams"
-                      label="Home Team"
+                      :label="$t('matches.home_team')"
                       option-value="id"
                       option-label="name"
                       emit-value
@@ -397,12 +397,12 @@
                       input-debounce="0"
                       @filter="filterHomeTeams"
                       lazy-rules
-                      :rules="[val => !!val || 'Home team is required']"
+                      :rules="[val => !!val || $t('validation.home_team_required')]"
                     >
                       <template v-slot:no-option>
                         <q-item>
                           <q-item-section class="text-grey">
-                            No results found
+                            {{$t('matches.no_results')}}
                           </q-item-section>
                         </q-item>
                       </template>
@@ -412,10 +412,10 @@
                     <q-input
                       v-model.number="matchForm.home_team_score"
                       type="number"
-                      label="Score"
+                      :label="$t('matches.score')"
                       filled
                       lazy-rules
-                      :rules="[val => val !== null && val !== '' || 'Score is required']"
+                      :rules="[val => val !== null && val !== '' || $t('validation.score_required')]"
                       @update:model-value="calculatePoints"
                     />
                   </div>
@@ -429,7 +429,7 @@
                     <q-select
                       v-model="matchForm.away_team_id"
                       :options="filteredAwayTeams"
-                      label="Away Team"
+                      :label="$t('matches.away_team')"
                       option-value="id"
                       option-label="name"
                       emit-value
@@ -439,12 +439,12 @@
                       input-debounce="0"
                       @filter="filterAwayTeams"
                       lazy-rules
-                      :rules="[val => !!val || 'Away team is required', val => val !== matchForm.home_team_id || 'Away team must be different from home team']"
+                      :rules="[val => !!val || $t('validation.away_team_required'), val => val !== matchForm.home_team_id || $t('matches.away_team_different')]"
                     >
                       <template v-slot:no-option>
                         <q-item>
                           <q-item-section class="text-grey">
-                            No results found
+                            {{$t('matches.no_results')}}
                           </q-item-section>
                         </q-item>
                       </template>
@@ -454,10 +454,10 @@
                     <q-input
                       v-model.number="matchForm.away_team_score"
                       type="number"
-                      label="Score"
+                      :label="$t('matches.score')"
                       filled
                       lazy-rules
-                      :rules="[val => val !== null && val !== '' || 'Score is required']"
+                      :rules="[val => val !== null && val !== '' || $t('validation.score_required')]"
                       @update:model-value="calculatePoints"
                     />
                   </div>
@@ -474,10 +474,10 @@
                        <q-input
                         v-model.number="matchForm.home_team_score"
                         type="number"
-                        :label="`${matchForm.home_team.name} Score`"
+                        :label="`${matchForm.home_team.name} ${$t('matches.score')}`"
                         filled
                         lazy-rules
-                        :rules="[val => val !== null && val !== '' || 'Score is required']"
+                        :rules="[val => val !== null && val !== '' || $t('validation.score_required')]"
                         @update:model-value="calculatePoints"
                       />
                     </div>
@@ -485,10 +485,10 @@
                       <q-input
                         v-model.number="matchForm.away_team_score"
                         type="number"
-                        :label="`${matchForm.away_team.name} Score`"
+                        :label="`${matchForm.away_team.name} ${$t('matches.score')}`"
                         filled
                         lazy-rules
-                        :rules="[val => val !== null && val !== '' || 'Score is required']"
+                        :rules="[val => val !== null && val !== '' || $t('validation.score_required')]"
                         @update:model-value="calculatePoints"
                       />
                     </div>
@@ -520,17 +520,17 @@
                 v-if="dialogMode !== 'result'"
                 v-model.number="matchForm.round"
                 type="number"
-                label="Round"
+                :label="$t('matches.round')"
                 filled
                 lazy-rules
-                :rules="[val => val !== null && val > 0 || 'Round is required']"
+                :rules="[val => val !== null && val > 0 || $t('validation.round_required')]"
               />
 
               <q-select
                 v-if="dialogMode === 'add' || dialogMode === 'edit'"
                 v-model="matchForm.status"
                 :options="statusOptions"
-                label="Status"
+                :label="$t('matches.status')"
                 filled
               />
 
@@ -538,14 +538,14 @@
                 v-if="dialogMode !== 'schedule'"
                 v-model="matchForm.observation"
                 type="textarea"
-                label="Observation"
+                :label="$t('matches.observation')"
                 filled
                 :lazy-rules="dialogMode === 'result'"
-                :rules="dialogMode === 'result' ? [val => !!val || 'Observation is required'] : []"
+                :rules="dialogMode === 'result' ? [val => !!val || $t('validation.observation_required')] : []"
               />
             </div>
             <q-card-actions align="right" class="text-primary">
-              <q-btn flat label="Cancel" @click="closeMatchDialog" />
+              <q-btn flat :label="$t('app.cancel')" @click="closeMatchDialog" />
               <q-btn type="submit" flat :label="submitButtonLabel" />
             </q-card-actions>
           </q-form>
@@ -562,8 +562,10 @@ import { MatchService } from 'src/services/MatchService'
 import { UserService } from 'src/services/UserService'
 import { useQuasar } from 'quasar'
 import { format } from 'date-fns'
+import { useI18n } from 'vue-i18n'
 
 const $q = useQuasar()
+const { t } = useI18n()
 
 const matches = ref([])
 const loading = ref(false)
@@ -590,7 +592,7 @@ const showNone = ref(false)
 
 const roundOptions = computed(() => {
   const rounds = [...new Set(matches.value.map(match => match.round))].sort((a, b) => b - a)
-  return rounds.map(round => ({ label: `Round ${round}`, value: round }))
+  return rounds.map(round => ({ label: `${t('matches.round')} ${round}`, value: round }))
 })
 
 const initialMatchForm = {
@@ -612,25 +614,26 @@ const initialMatchForm = {
 
 const matchForm = ref({ ...initialMatchForm })
 
-const columns = [
-  { name: 'home_team', label: 'Home Team', align: 'left', field: row => row.home_team.name, sortable: true, headerStyle: 'width: 120px;' },
-  { name: 'away_team', label: 'Away Team', align: 'left', field: row => row.away_team.name, sortable: true, headerStyle: 'width: 120px;' },
-  { name: 'score', label: 'Score', align: 'center', field: row => `${row.home_team_score} - ${row.away_team_score}`, headerStyle: 'width: 70px;' },
-  { name: 'home_team_points', label: 'Home Points', align: 'center', field: row => row.home_team_points, sortable: true, headerStyle: 'width: 70px;' },
-  { name: 'away_team_points', label: 'Away Points', align: 'center', field: row => row.away_team_points, sortable: true, headerStyle: 'width: 70px;' },
-  { name: 'season', label: 'Season', field: row => row.season.name, sortable: true, headerStyle: 'width: 110px;' },
-  { name: 'round', label: 'Round', field: row => row.round, align: 'center', sortable: true, headerStyle: 'width: 60px;' },
-  { name: 'date_time', label: 'Date & Time', field: row => `${format(new Date(row.date), 'dd/MM/yyyy')}${row.hour ? ` ${row.hour}:00` : ''}`, align: 'center', sortable: true, headerStyle: 'width: 120px;' },
-  { name: 'status', label: 'Status', field: row => row.status, align: 'center', sortable: true, headerStyle: 'width: 90px;' },  { name: 'stadium', label: 'Stadium', field: row => row.stadium.name, sortable: true, headerStyle: 'width: 110px;' },
-  { name: 'actions', label: 'Actions', field: 'id', align: 'right', headerStyle: 'width: 80' }
-]
+const columns = computed(() => [
+  { name: 'home_team', label: t('matches.home_team'), align: 'left', field: row => row.home_team.name, sortable: true, headerStyle: 'width: 120px;' },
+  { name: 'away_team', label: t('matches.away_team'), align: 'left', field: row => row.away_team.name, sortable: true, headerStyle: 'width: 120px;' },
+  { name: 'score', label: t('matches.score'), align: 'center', field: row => `${row.home_team_score} - ${row.away_team_score}`, headerStyle: 'width: 70px;' },
+  { name: 'home_team_points', label: t('matches.home_points'), align: 'center', field: row => row.home_team_points, sortable: true, headerStyle: 'width: 70px;' },
+  { name: 'away_team_points', label: t('matches.away_points'), align: 'center', field: row => row.away_team_points, sortable: true, headerStyle: 'width: 70px;' },
+  { name: 'season', label: t('matches.season'), field: row => row.season.name, sortable: true, headerStyle: 'width: 110px;' },
+  { name: 'round', label: t('matches.round'), field: row => row.round, align: 'center', sortable: true, headerStyle: 'width: 60px;' },
+  { name: 'date_time', label: t('matches.date_time'), field: row => `${format(new Date(row.date), 'dd/MM/yyyy')}${row.hour ? ` ${row.hour}:00` : ''}`, align: 'center', sortable: true, headerStyle: 'width: 120px;' },
+  { name: 'status', label: t('matches.status'), field: row => row.status, align: 'center', sortable: true, headerStyle: 'width: 90px;' },
+  { name: 'stadium', label: t('matches.stadium'), field: row => row.stadium.name, sortable: true, headerStyle: 'width: 110px;' },
+  { name: 'actions', label: t('matches.actions'), field: 'id', align: 'right', headerStyle: 'width: 80' }
+])
 const fetchMatches = async () => {
   loading.value = true
   try {
     const response = await MatchService.getMatches()
     matches.value = response.data
   } catch (error) {
-    const errorMessage = error.response?.data?.error || 'Failed to load matches'
+    const errorMessage = error.response?.data?.error || t('matches.failed_load')
     $q.notify({
       color: 'negative',
       message: errorMessage,
@@ -653,7 +656,7 @@ const fetchDropdownData = async () => {
     stadiums.value = stadiumsRes.data
     filteredTeamsForFilter.value = teamsRes.data
   } catch (error) {
-    const errorMessage = error.response?.data?.error || 'Failed to load form data'
+    const errorMessage = error.response?.data?.error || t('matches.failed_form_data')
     $q.notify({
       color: 'negative',
       message: errorMessage,
@@ -753,33 +756,24 @@ const groupedRows = computed(() => {
   return rows
 })
 
-const dialogTitle = computed(() => {
-  const titles = {
-    add: 'Add New Match',
-    edit: 'Edit Match',
-    schedule: 'Add Scheduled Match',
-    result: 'Register Result'
-  }
-  return titles[dialogMode.value] || 'Add New Match'
-})
 const submitButtonLabel = computed(() => {
-  return (dialogMode.value === 'add' || dialogMode.value === 'schedule') ? 'Save' : 'Update'
+  return (dialogMode.value === 'add' || dialogMode.value === 'schedule') ? t('app.save') : t('app.update')
 })
 
 const homeTeamPointsLabel = computed(() => {
   if (matchForm.value.home_team_id) {
     const team = teams.value.find(t => t.id === matchForm.value.home_team_id)
-    return team ? `${team.name} Points` : 'Home Team Points'
+    return team ? `${team.name} ${t('matches.points')}` : t('matches.home_team_points')
   }
-  return 'Home Team Points'
+  return t('matches.home_team_points')
 })
 
 const awayTeamPointsLabel = computed(() => {
   if (matchForm.value.away_team_id) {
     const team = teams.value.find(t => t.id === matchForm.value.away_team_id)
-    return team ? `${team.name} Points` : 'Away Team Points'
+    return team ? `${team.name} ${t('matches.points')}` : t('matches.away_team_points')
   }
-  return 'Away Team Points'
+  return t('matches.away_team_points')
 })
 const statusColor = (status) => {
   const colors = {
@@ -932,7 +926,7 @@ const saveMatch = async () => {
         observation: dataToSave.observation
       }
       await MatchService.updateMatch(dataToSave.id, updatePayload)
-      $q.notify({ color: 'positive', message: 'Match updated successfully' })
+      $q.notify({ color: 'positive', message: t('matches.updated') })
     } else { // add' or 'schedule'
       const isSchedule = dialogMode.value === 'schedule'
       const createPayload = {
@@ -951,12 +945,12 @@ const saveMatch = async () => {
         observation: isSchedule ? '' : dataToSave.observation
       }
       await MatchService.createMatch(createPayload)
-      $q.notify({ color: 'positive', message: 'Match created successfully' })
+      $q.notify({ color: 'positive', message: t('matches.created') })
     }
     fetchMatches()
     closeMatchDialog()
   } catch (error) {
-    const errorMessage = error.response?.data?.error || 'Failed to save match'
+    const errorMessage = error.response?.data?.error || t('matches.failed_save')
     $q.notify({
       color: 'negative',
       message: errorMessage,
@@ -967,17 +961,17 @@ const saveMatch = async () => {
 
 const confirmDeleteMatch = (match) => {
   $q.dialog({
-    title: 'Confirm',
-    message: `Are you sure you want to delete the match between ${match.home_team.name} and ${match.away_team.name}?`,
+    title: t('app.confirm'),
+    message: t('matches.confirm_delete', { home: match.home_team.name, away: match.away_team.name }),
     cancel: true,
     persistent: true
   }).onOk(async () => {
     try {
       await MatchService.deleteMatch(match.id)
-      $q.notify({ color: 'positive', message: 'Match deleted successfully' })
+      $q.notify({ color: 'positive', message: t('matches.deleted') })
       fetchMatches()
     } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Failed to delete match'
+      const errorMessage = error.response?.data?.error || t('matches.failed_delete')
       $q.notify({ 
         color: 'negative',
         message: errorMessage,

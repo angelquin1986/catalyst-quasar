@@ -5,7 +5,7 @@
         <q-select
           v-model="selectedTeam"
           :options="teamOptions"
-          label="Filter by Team"
+          :label="$t('calendar.filter_by_team')"
           option-value="id"
           option-label="name"
           emit-value
@@ -22,7 +22,7 @@
         flat
         bordered
         separator="cell"
-        title="Calendar"
+        :title="$t('calendar.title')"
         :rows="groupedRows"
         :columns="columns"
         row-key="id"
@@ -37,7 +37,7 @@
             <q-card bordered flat>
               <q-card-section class="text-center">
                 <div class="text-grey-8">{{ formatDateTime(props.row.date, props.row.hour) }} - {{ props.row.season.name }}</div>
-                <div class="text-grey-8">Round: {{ props.row.round }} | Status: <span class="text-bold">{{ props.row.status }}</span></div>
+                <div class="text-grey-8">{{$t('calendar.round')}}: {{ props.row.round }} | {{$t('calendar.status')}}: <span class="text-bold">{{ props.row.status }}</span></div>
                 <div class="text-h6 q-mt-sm">{{ props.row.home_team.name }} vs {{ props.row.away_team.name }}</div>
                 <div class="text-h5 q-my-sm">
                   <span :class="{'text-bold': true, 'winner-highlight': props.row.home_team_score > props.row.away_team_score, 'draw-highlight': props.row.home_team_score === props.row.away_team_score}">{{ props.row.home_team_score }}</span>
@@ -102,6 +102,7 @@ import { CalendarService } from 'src/services/CalendarService'
 import { MatchService } from 'src/services/MatchService'
 import { useQuasar } from 'quasar'
 import { format } from 'date-fns'
+import { useI18n } from 'vue-i18n'
 
 const $q = useQuasar()
 const matches = ref([])
@@ -110,17 +111,18 @@ const teams = ref([])
 const selectedTeam = ref(null)
 const filteredTeams = ref([])
 
-const columns = [
-  { name: 'home_team', label: 'Home Team', align: 'left', field: row => row.home_team.name, sortable: true, headerStyle: 'width: 120px;' },
-  { name: 'away_team', label: 'Away Team', align: 'left', field: row => row.away_team.name, sortable: true, headerStyle: 'width: 120px;' },
-  { name: 'score', label: 'Score', align: 'center', field: row => `${row.home_team_score} - ${row.away_team_score}`, headerStyle: 'width: 70px;' },
-  { name: 'home_team_points', label: 'Home Points', align: 'center', field: row => row.home_team_points, sortable: true, headerStyle: 'width: 70px;' },
-  { name: 'away_team_points', label: 'Away Points', align: 'center', field: row => row.away_team_points, sortable: true, headerStyle: 'width: 70px;' },
-  { name: 'season', label: 'Season', field: row => row.season.name, sortable: true, headerStyle: 'width: 110px;' },
-  { name: 'round', label: 'Round', field: row => row.round, align: 'center', sortable: true, headerStyle: 'width: 60px;' },
-  { name: 'date_time', label: 'Date & Time', field: row => formatDateTime(row.date, row.hour), align: 'center', sortable: true, headerStyle: 'width: 120px;' },
-  { name: 'status', label: 'Status', field: row => row.status, align: 'center', sortable: true, headerStyle: 'width: 90px;' }
-]
+const { t } = useI18n()
+const columns = computed(() => [
+  { name: 'home_team', label: t('calendar.home_team'), align: 'left', field: row => row.home_team.name, sortable: true, headerStyle: 'width: 120px;' },
+  { name: 'away_team', label: t('calendar.away_team'), align: 'left', field: row => row.away_team.name, sortable: true, headerStyle: 'width: 120px;' },
+  { name: 'score', label: t('calendar.score'), align: 'center', field: row => `${row.home_team_score} - ${row.away_team_score}`, headerStyle: 'width: 70px;' },
+  { name: 'home_team_points', label: t('calendar.home_points'), align: 'center', field: row => row.home_team_points, sortable: true, headerStyle: 'width: 70px;' },
+  { name: 'away_team_points', label: t('calendar.away_points'), align: 'center', field: row => row.away_team_points, sortable: true, headerStyle: 'width: 70px;' },
+  { name: 'season', label: t('calendar.season'), field: row => row.season.name, sortable: true, headerStyle: 'width: 110px;' },
+  { name: 'round', label: t('calendar.round'), field: row => row.round, align: 'center', sortable: true, headerStyle: 'width: 60px;' },
+  { name: 'date_time', label: t('calendar.date_time'), field: row => formatDateTime(row.date, row.hour), align: 'center', sortable: true, headerStyle: 'width: 120px;' },
+  { name: 'status', label: t('calendar.status'), field: row => row.status, align: 'center', sortable: true, headerStyle: 'width: 90px;' }
+])
 
 const pagination = ref({
   rowsPerPage: 0 // 0 means show all rows

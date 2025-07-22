@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <q-card>
       <q-card-section>
-        <q-table title="Players"
+        <q-table :title="$t('settings_players.title')"
                  :rows="rows"
                  :columns="columns"
                  row-key="name"
@@ -23,25 +23,25 @@ const columns = [
   {
     name: 'name',
     required: true,
-    label: 'Dessert (100g serving)',
+    label: this && this.$t ? this.$t('settings_players.dessert') : 'Dessert (100g serving)',
     align: 'left',
     field: row => row.name,
     format: val => `${val}`,
     sortable: true
   },
-  { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-  { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-  { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
+  { name: 'calories', align: 'center', label: this && this.$t ? this.$t('settings_players.calories') : 'Calories', field: 'calories', sortable: true },
+  { name: 'fat', label: this && this.$t ? this.$t('settings_players.fat') : 'Fat (g)', field: 'fat', sortable: true },
+  { name: 'carbs', label: this && this.$t ? this.$t('settings_players.carbs') : 'Carbs (g)', field: 'carbs' },
+  { name: 'protein', label: this && this.$t ? this.$t('settings_players.protein') : 'Protein (g)', field: 'protein' },
+  { name: 'sodium', label: this && this.$t ? this.$t('settings_players.sodium') : 'Sodium (mg)', field: 'sodium' },
   {
     name: 'calcium',
-    label: 'Calcium (%)',
+    label: this && this.$t ? this.$t('settings_players.calcium') : 'Calcium (%)',
     field: 'calcium',
     sortable: true,
     sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
   },
-  { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
+  { name: 'iron', label: this && this.$t ? this.$t('settings_players.iron') : 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
 ]
 
 const rows = [

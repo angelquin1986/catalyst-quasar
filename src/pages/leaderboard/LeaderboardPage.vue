@@ -5,7 +5,7 @@
         flat
         bordered
         separator="cell"
-        title="Leaderboard"
+        :title="$t('leaderboard.title')"
         :rows="leaderboard"
         :columns="columns"
         row-key="teamId"
@@ -17,11 +17,11 @@
       >
         <template v-slot:top-left>
           <div class="row q-gutter-md items-center">
-             <div class="text-h6">Leaderboard</div>
+             <div class="text-h6">{{$t('leaderboard.title')}}</div>
             <q-select
               v-model="selectedSeason"
               :options="seasons"
-              label="Select Season"
+              :label="$t('leaderboard.select_season')"
               option-value="id"
               option-label="name"
               emit-value
@@ -34,15 +34,15 @@
           </div>
           <div class="q-mt-sm q-mb-md">
             <q-banner dense class="bg-grey-2 text-grey-8">
-              <span class="text-bold">Leyenda:</span>
-              <span class="q-ml-md"><b>PJ</b>: Partidos Jugados</span>
-              <span class="q-ml-md"><b>G</b>: Ganados</span>
-              <span class="q-ml-md"><b>E</b>: Empatados</span>
-              <span class="q-ml-md"><b>P</b>: Perdidos</span>
-              <span class="q-ml-md"><b>GF</b>: Goles a Favor</span>
-              <span class="q-ml-md"><b>GC</b>: Goles en Contra</span>
-              <span class="q-ml-md"><b>DG</b>: Diferencia de Goles</span>
-              <span class="q-ml-md"><b>Pts</b>: Puntos</span>
+              <span class="text-bold">{{$t('leaderboard.legend')}}:</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.pj')}}</b>: {{$t('leaderboard.played_full')}}</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.g')}}</b>: {{$t('leaderboard.won_full')}}</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.e')}}</b>: {{$t('leaderboard.drawn_full')}}</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.p')}}</b>: {{$t('leaderboard.lost_full')}}</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.gf')}}</b>: {{$t('leaderboard.goals_for_full')}}</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.gc')}}</b>: {{$t('leaderboard.goals_against_full')}}</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.dg')}}</b>: {{$t('leaderboard.goal_difference_full')}}</span>
+              <span class="q-ml-md"><b>{{$t('leaderboard.pts')}}</b>: {{$t('leaderboard.points_full')}}</span>
             </q-banner>
           </div>
         </template>
@@ -61,31 +61,31 @@
               <q-card-section class="row text-center q-gutter-sm justify-around">
                 <div>
                   <div class="text-subtitle2">{{ props.row.played }}</div>
-                  <div class="text-caption text-grey">PJ</div>
+                  <div class="text-caption text-grey">{{$t('leaderboard.pj')}}</div>
                 </div>
                 <div>
                   <div class="text-subtitle2">{{ props.row.won }}</div>
-                  <div class="text-caption text-grey">G</div>
+                  <div class="text-caption text-grey">{{$t('leaderboard.g')}}</div>
                 </div>
                 <div>
                   <div class="text-subtitle2">{{ props.row.drawn }}</div>
-                  <div class="text-caption text-grey">E</div>
+                  <div class="text-caption text-grey">{{$t('leaderboard.e')}}</div>
                 </div>
                 <div>
                   <div class="text-subtitle2">{{ props.row.lost }}</div>
-                  <div class="text-caption text-grey">P</div>
+                  <div class="text-caption text-grey">{{$t('leaderboard.p')}}</div>
                 </div>
                  <div>
                   <div class="text-subtitle2">{{ props.row.goalsFor }}</div>
-                  <div class="text-caption text-grey">GF</div>
+                  <div class="text-caption text-grey">{{$t('leaderboard.gf')}}</div>
                 </div>
                  <div>
                   <div class="text-subtitle2">{{ props.row.goalsAgainst }}</div>
-                  <div class="text-caption text-grey">GC</div>
+                  <div class="text-caption text-grey">{{$t('leaderboard.gc')}}</div>
                 </div>
                 <div>
                   <div class="text-subtitle2">{{ props.row.goalDifference }}</div>
-                  <div class="text-caption text-grey">DG</div>
+                  <div class="text-caption text-grey">{{$t('leaderboard.dg')}}</div>
                 </div>
               </q-card-section>
             </q-card>
@@ -140,8 +140,10 @@ import { ref, onMounted } from 'vue'
 import { LeaderboardService } from 'src/services/LeaderboardService'
 import { MatchService } from 'src/services/MatchService' // Re-using to get seasons
 import { useQuasar } from 'quasar'
+import { useI18n } from 'vue-i18n'
 
 const $q = useQuasar()
+const { t } = useI18n()
 
 const leaderboard = ref([])
 const seasons = ref([])
@@ -154,15 +156,15 @@ const pagination = ref({
 
 const columns = [
   { name: 'position', label: '#', align: 'left' },
-  { name: 'teamName', label: 'Team', align: 'left', field: 'teamName', sortable: true },
-  { name: 'played', label: 'PJ', align: 'center', field: 'played' },
-  { name: 'won', label: 'G', align: 'center', field: 'won' },
-  { name: 'drawn', label: 'E', align: 'center', field: 'drawn' },
-  { name: 'lost', label: 'P', align: 'center', field: 'lost' },
-  { name: 'goalsFor', label: 'GF', align: 'center', field: 'goalsFor' },
-  { name: 'goalsAgainst', label: 'GC', align: 'center', field: 'goalsAgainst' },
-  { name: 'goalDifference', label: 'DG', align: 'center', field: 'goalDifference' },
-  { name: 'points', label: 'Pts', align: 'center', field: 'points', sortable: true }
+  { name: 'teamName', label: t('leaderboard.team'), align: 'left', field: 'teamName', sortable: true },
+  { name: 'played', label: t('leaderboard.played'), align: 'center', field: 'played' },
+  { name: 'won', label: t('leaderboard.won'), align: 'center', field: 'won' },
+  { name: 'drawn', label: t('leaderboard.drawn'), align: 'center', field: 'drawn' },
+  { name: 'lost', label: t('leaderboard.lost'), align: 'center', field: 'lost' },
+  { name: 'goalsFor', label: t('leaderboard.goals_for'), align: 'center', field: 'goalsFor' },
+  { name: 'goalsAgainst', label: t('leaderboard.goals_against'), align: 'center', field: 'goalsAgainst' },
+  { name: 'goalDifference', label: t('leaderboard.goal_difference'), align: 'center', field: 'goalDifference' },
+  { name: 'points', label: t('leaderboard.points'), align: 'center', field: 'points', sortable: true }
 ]
 
 const fetchSeasons = async () => {
@@ -177,7 +179,7 @@ const fetchSeasons = async () => {
   } catch (error) {
     $q.notify({
       color: 'negative',
-      message: 'Failed to load seasons'+error,
+      message: t('leaderboard.failed_load_seasons')+error,
       icon: 'report_problem'
     })
   }
@@ -194,7 +196,7 @@ const fetchLeaderboard = async (seasonId) => {
     leaderboard.value = response.data
   } catch (error) {
     leaderboard.value = []
-    const errorMessage = error.response?.data?.error || `Failed to load leaderboard for season ${seasonId}`
+    const errorMessage = error.response?.data?.error || t('leaderboard.failed_load', { seasonId })
     $q.notify({
       color: 'negative',
       message: errorMessage,

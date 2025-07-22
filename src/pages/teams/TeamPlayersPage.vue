@@ -7,13 +7,13 @@
           <q-btn 
             flat 
             icon="arrow_back" 
-            label="Volver a Equipos" 
+            :label="$t('app.back') + ' ' + $t('teams.title')" 
             @click="$router.push('/teams')"
             class="q-mr-md"
           />
           <div class="text-h4 text-weight-bold text-primary">
             <q-icon name="boy" class="q-mr-sm" />
-            Jugadores de {{ team?.name || 'Equipo' }}
+            {{$t('teams.players', { team: team?.name || $t('teams.title') })}}
           </div>
         </div>
         <q-separator class="q-mb-lg" />
@@ -38,14 +38,14 @@
               <div class="text-h5 text-weight-bold">{{ team.name }}</div>
               <div class="text-subtitle1 text-grey">{{ team.category }}</div>
               <div class="text-caption text-grey">
-                Fundado: {{ formatDate(team.birth_date) }}
+                {{$t('teams.founded')}}: {{ formatDate(team.birth_date) }}
               </div>
             </div>
             <div class="col-auto">
               <q-btn 
                 color="primary" 
                 icon="add" 
-                label="Agregar Jugador" 
+                :label="$t('teams.add_player')" 
                 @click="openPlayerDialog()"
               />
             </div>
@@ -79,9 +79,9 @@
                   <div class="player-number">{{ player.number }}</div>
                 </div>
                 <div class="text-h6 text-weight-bold">{{ player.name }} {{ player.last_name }}</div>
-                <div class="text-caption text-grey">Cédula: {{ player.id }}</div>
+                <div class="text-caption text-grey">{{$t('players.id')}}: {{ player.id }}</div>
                 <div class="text-caption text-grey">
-                  Nacimiento: {{ formatDate(player.birth_date) }}
+                  {{$t('players.birth_date')}}: {{ formatDate(player.birth_date) }}
                 </div>
               </q-card-section>
 
@@ -107,14 +107,14 @@
             <q-card class="empty-state-card">
               <q-card-section class="text-center">
                 <q-icon name="people" size="4rem" color="grey-5" />
-                <div class="text-h6 text-grey q-mt-md">No hay jugadores registrados</div>
+                <div class="text-h6 text-grey q-mt-md">{{$t('teams.no_players')}}</div>
                 <div class="text-caption text-grey q-mb-md">
-                  Agrega el primer jugador al equipo
+                  {{$t('teams.first_player')}}
                 </div>
                 <q-btn 
                   color="primary" 
                   icon="add" 
-                  label="Agregar Jugador" 
+                  :label="$t('teams.add_player')" 
                   @click="openPlayerDialog()"
                 />
               </q-card-section>
@@ -128,7 +128,7 @@
     <q-dialog v-model="playerDialog" persistent>
       <q-card style="min-width: 500px">
         <q-card-section class="row items-center">
-          <div class="text-h6">{{ isEditing ? 'Editar Jugador' : 'Nuevo Jugador' }}</div>
+          <div class="text-h6">{{ isEditing ? $t('players.edit') : $t('players.new') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -139,10 +139,10 @@
               <div class="col-12 col-sm-6">
                 <q-input
                   v-model="playerForm.id"
-                  label="Cédula de Identidad"
+                  :label="$t('players.id')"
                   :rules="[
-                    val => !!val || 'La cédula es requerida',
-                    val => /^\d{10,13}$/.test(val) || 'La cédula debe tener entre 10 y 13 dígitos'
+                    val => !!val || $t('validation.required'),
+                    val => /^\d{10,13}$/.test(val) || $t('validation.id_length')
                   ]"
                   outlined
                   :readonly="isEditing"
@@ -151,11 +151,11 @@
               <div class="col-12 col-sm-6">
                 <q-input
                   v-model="playerForm.number"
-                  label="Número de Camiseta"
+                  :label="$t('players.number')"
                   type="number"
                   :rules="[
-                    val => !!val || 'El número es requerido',
-                    val => val > 0 || 'El número debe ser mayor a 0'
+                    val => !!val || $t('validation.required'),
+                    val => val > 0 || $t('validation.number_positive')
                   ]"
                   outlined
                 />
@@ -166,16 +166,16 @@
               <div class="col-12 col-sm-6">
                 <q-input
                   v-model="playerForm.name"
-                  label="Nombre"
-                  :rules="[val => !!val || 'El nombre es requerido']"
+                  :label="$t('players.name')"
+                  :rules="[val => !!val || $t('validation.required')]"
                   outlined
                 />
               </div>
               <div class="col-12 col-sm-6">
                 <q-input
                   v-model="playerForm.last_name"
-                  label="Apellido"
-                  :rules="[val => !!val || 'El apellido es requerido']"
+                  :label="$t('players.last_name')"
+                  :rules="[val => !!val || $t('validation.required')]"
                   outlined
                 />
               </div>
@@ -183,16 +183,16 @@
 
             <q-input
               v-model="playerForm.birth_date"
-              label="Fecha de Nacimiento"
+              :label="$t('players.birth_date')"
               type="date"
               :rules="[
-                val => !!val || 'La fecha es requerida',
-                val => validateAge(val) || 'El jugador debe tener al menos 5 años'
+                val => !!val || $t('validation.required'),
+                val => validateAge(val) || $t('validation.min_age')
               ]"
               outlined
             />
 
-            <div class="text-subtitle2 q-mb-sm">Foto del Jugador</div>
+            <div class="text-subtitle2 q-mb-sm">{{$t('players.photo')}}</div>
             <div class="row items-center q-gutter-md">
               <q-avatar size="100px" class="player-photo-preview">
                 <q-img 
@@ -205,7 +205,7 @@
               <div class="col">
                 <q-file
                   v-model="photoFile"
-                  label="Seleccionar Foto"
+                  :label="$t('players.photo')"
                   accept=".jpg,.jpeg,.png"
                   @update:model-value="handlePhotoChange"
                   outlined
@@ -215,7 +215,7 @@
                   </template>
                 </q-file>
                 <div class="text-caption text-grey q-mt-xs">
-                  Máximo 500KB, formato JPG o PNG (tamaño carnet recomendado)
+                  {{$t('validation.photo_size')}}, {{$t('validation.photo_format')}} (tamaño carnet recomendado)
                 </div>
               </div>
             </div>
@@ -223,10 +223,10 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="primary" v-close-popup />
+          <q-btn flat :label="$t('app.cancel')" color="primary" v-close-popup />
           <q-btn 
             unelevated 
-            :label="isEditing ? 'Actualizar' : 'Crear'" 
+            :label="isEditing ? $t('app.update') : $t('app.create')" 
             color="primary" 
             @click="savePlayer"
             :loading="loading"
@@ -240,12 +240,12 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="warning" color="negative" text-color="white" />
-          <span class="q-ml-sm">¿Estás seguro de que quieres eliminar este jugador?</span>
+          <span class="q-ml-sm">{{$t('app.confirm')}} {{$t('app.delete')}}?</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn flat label="Eliminar" color="negative" @click="deletePlayer" />
+          <q-btn flat :label="$t('app.cancel')" color="primary" v-close-popup />
+          <q-btn flat :label="$t('app.delete')" color="negative" @click="deletePlayer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -258,12 +258,14 @@ import { useRoute } from 'vue-router'
 import { TeamService } from 'src/services/TeamService'
 import { PlayerService } from 'src/services/PlayerService'
 import { useQuasar } from 'quasar'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'TeamPlayersPage',
   setup() {
     const $q = useQuasar()
     const route = useRoute()
+    const { t } = useI18n()
     
     const team = ref(null)
     const players = ref([])
@@ -294,7 +296,7 @@ export default {
       } catch (error) {
         $q.notify({
           color: 'negative',
-          message: 'Error al cargar el equipo'+error,
+          message: t('notifications.error_loading_team')+error,
           icon: 'error'
         })
       } finally {
@@ -313,7 +315,7 @@ export default {
         console.error('❌ Error cargando players:', error)
         $q.notify({
           color: 'negative',
-          message: 'Error al cargar los jugadores'+error,
+          message: t('notifications.error_loading_players')+error,
           icon: 'error'
         })
       } finally {
@@ -359,7 +361,7 @@ export default {
       if (file.size > 512000) {
         $q.notify({
           color: 'negative',
-          message: 'La foto debe ser menor a 500KB',
+          message: t('validation.photo_size_error'),
           icon: 'error'
         })
         photoFile.value = null
@@ -371,7 +373,7 @@ export default {
       if (!allowedTypes.includes(file.type)) {
         $q.notify({
           color: 'negative',
-          message: 'Solo se permiten formatos JPG y PNG',
+          message: t('validation.photo_format_error'),
           icon: 'error'
         })
         photoFile.value = null
@@ -407,14 +409,14 @@ export default {
           await PlayerService.updatePlayer(selectedPlayer.value.id, playerForm.value)
           $q.notify({
             color: 'positive',
-            message: 'Jugador actualizado exitosamente',
+            message: t('notifications.player_updated'),
             icon: 'check'
           })
         } else {
           await PlayerService.createPlayer(playerForm.value)
           $q.notify({
             color: 'positive',
-            message: 'Jugador creado exitosamente',
+            message: t('notifications.player_created'),
             icon: 'check'
           })
         }
@@ -424,7 +426,7 @@ export default {
       } catch (error) {
         $q.notify({
           color: 'negative',
-          message: error.response?.data?.error || 'Error al guardar el jugador',
+          message: error.response?.data?.error || t('notifications.error_saving_player'),
           icon: 'error'
         })
       } finally {
@@ -443,7 +445,8 @@ export default {
         await PlayerService.deletePlayer(selectedPlayer.value.id)
         $q.notify({
           color: 'positive',
-          message: 'Jugador eliminado exitosamente',
+          message: t('notifications.player_deleted'),
+          
           icon: 'check'
         })
         deleteDialog.value = false
@@ -451,7 +454,7 @@ export default {
       } catch (error) {
         $q.notify({
           color: 'negative',
-          message: error.response?.data?.error || 'Error al eliminar el jugador',
+          message: error.response?.data?.error || t('notifications.error_deleting_player'),
           icon: 'error'
         })
       } finally {

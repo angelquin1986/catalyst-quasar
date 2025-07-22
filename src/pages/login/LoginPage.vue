@@ -11,7 +11,7 @@
           <q-card-section>
             <div class="text-center q-pt-lg">
               <div class="col text-h6 ellipsis">
-                Log in
+                {{$t('login.title')}}
               </div>
             </div>
           </q-card-section>
@@ -22,7 +22,7 @@
               <q-input
                 filled
                 v-model="username"
-                label="Username"
+                :label="$t('login.username')"
                 lazy-rules
               />
 
@@ -30,14 +30,14 @@
                 type="password"
                 filled
                 v-model="password"
-                label="Password"
+                :label="$t('login.password')"
                 lazy-rules
                 @keyup.enter="handleLogin"
               />
 
               <div>
                 <q-btn
-                  label="Login"
+                  :label="$t('login.login')"
                   type="button"
                   color="primary"
                   @click="handleLogin"
@@ -57,10 +57,12 @@ import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { UserService } from 'src/services/UserService.js'
 import { useQuasar } from 'quasar'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   setup() {
     const $q = useQuasar()
+    const { t } = useI18n()
     const username = ref('');
     const password = ref('');
     const router = useRouter(); // Initialize router
@@ -71,7 +73,7 @@ export default defineComponent({
         router.push('/');
       } catch (error) {
         console.error('Login failed:', error.message);
-        $q.notify('Login failed:', error.message)
+        $q.notify(t('login.failed')+': '+error.message)
       }
     };
 

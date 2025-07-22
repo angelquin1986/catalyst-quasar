@@ -1,26 +1,26 @@
 [
   {
-    "title": "Configuration",
-    "caption": "admin",
+    "title": "menu.configuration",
+    "caption": "menu.configuration",
     "icon": "school",
     "children": [
       {
-        "title": "User Management",
-        "caption": "Manage users",
+        "title": "menu.user_management",
+        "caption": "menu.user_management",
         "icon": "person",
         "link": "https://quasar.dev/user-management",
         "key": "m_user_management"
       },
       {
-        "title": "System Settings",
-        "caption": "System settings",
+        "title": "menu.system_settings",
+        "caption": "menu.system_settings",
         "icon": "settings",
         "link": "/SystemMaintenance",
         "key": "m_config"
       },
       {
-        "title": "Matches",
-        "caption": "Soccer match results",
+        "title": "menu.matches",
+        "caption": "menu.matches",
         "icon": "sports_soccer",
         "link": "/matches",
         "key": "m_matches"
@@ -28,68 +28,67 @@
     ]
   },
   {
-    "title": "Leaderboard",
-    "caption": "Season standings",
+    "title": "menu.leaderboard",
+    "caption": "menu.leaderboard",
     "icon": "leaderboard",
     "link": "/leaderboard",
     "key": "m_leaderboard"
   },
-  
       {
-        "title": "Equipos",
-        "caption": "Administrar equipos",
+        "title": "menu.teams",
+        "caption": "menu.teams",
         "icon": "sports_soccer",
         "link": "/teams",
         "key": "m_teams"
       },
   {
-    "title": "Calendar",
-    "caption": "Scheduled matches",
+    "title": "menu.calendar",
+    "caption": "menu.calendar",
     "icon": "event",
     "link": "/calendar",
     "key": "m_calendar"
   },
   {
-    "title": "Products",
-    "caption": "github.com/quasarframework",
+    "title": "menu.products",
+    "caption": "menu.products",
     "icon": "code",
     "link": "https://github.com/quasarframework",
     "key": "m_products"
   },
   {
-    "title": "Ligas",
-    "caption": "github.com/quasarframework",
+    "title": "menu.leagues",
+    "caption": "menu.leagues",
     "icon": "sports_soccer",
     "link": "https://github.com/quasarframework",
     "key": "m_league"
   },
   {
-    "title": "Discord Chat Channel",
-    "caption": "chat.quasar.dev",
+    "title": "menu.discord",
+    "caption": "menu.discord",
     "icon": "chat",
     "link": "https://chat.quasar.dev"
   },
   {
-    "title": "Forum",
-    "caption": "forum.quasar.dev",
+    "title": "menu.forum",
+    "caption": "menu.forum",
     "icon": "record_voice_over",
     "link": "https://forum.quasar.dev"
   },
   {
-    "title": "Twitter",
-    "caption": "@quasarframework",
+    "title": "menu.twitter",
+    "caption": "menu.twitter",
     "icon": "rss_feed",
     "link": "https://twitter.quasar.dev"
   },
   {
-    "title": "Facebook",
-    "caption": "@QuasarFramework",
+    "title": "menu.facebook",
+    "caption": "menu.facebook",
     "icon": "public",
     "link": "https://facebook.quasar.dev"
   },
   {
-    "title": "Quasar Awesome",
-    "caption": "Community Quasar projects",
+    "title": "menu.awesome",
+    "caption": "menu.awesome",
     "icon": "favorite",
     "link": "https://awesome.quasar.dev"
   }

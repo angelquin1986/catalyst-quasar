@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
+    <q-header elevated class="bg-primary text-white">
+      <q-toolbar class="bg-primary text-white">
         <q-btn
           flat
           dense
@@ -9,65 +9,78 @@
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
-        />
-        <q-toolbar-title>
-          Catalyst- Soft
+          class="q-mr-sm"
+        >
+          <q-tooltip>{{ $t('header.menu') }}</q-tooltip>
+        </q-btn>
+        <q-toolbar-title class="row items-center no-wrap">
+          <span class="text-white text-h6">Catalyst Soccer</span>
+          <span class="q-ml-md text-white text-caption" style="font-weight: bold;">v{{ appVersion }}</span>
+          <q-tooltip>{{ $t('header.version') }}</q-tooltip>
         </q-toolbar-title>
-        <div>Catalyst v{{ $q.version }}</div>
-        <div>
+        <div class="row items-center q-gutter-sm">
           <q-btn round flat>
-            <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            <q-avatar size="32px" class="user-avatar">
+              <template v-if="userProfile && userProfile.fullname">
+                <span>{{ getInitials(userProfile.fullname) }}</span>
+              </template>
+              <template v-else>
+                <q-icon name="person" />
+              </template>
             </q-avatar>
-            <q-menu
-              transition-show="jump-down"
-              transition-hide="jump-up">
-              <q-list style="min-width: 100px">
-                <UserOptions></UserOptions>
+            <q-tooltip>{{ $t('header.user') }}</q-tooltip>
+            <q-menu transition-show="jump-down" transition-hide="jump-up">
+              <q-list style="min-width: 180px">
+                <q-item>
+                  <q-item-section>
+                    <div class="text-subtitle2">{{ userProfile?.fullname || 'Usuario' }}</div>
+                    <div class="text-caption text-grey-7">{{ userProfile?.role?.name || userProfile?.role_id || '' }}</div>
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <UserOptions />
               </q-list>
             </q-menu>
           </q-btn>
+          <!-- Language selector -->
+          <q-btn flat round dense>
+            <q-avatar size="26px">
+              <img :src="currentLocale === 'es' ? 'https://flagcdn.com/ec.svg' : 'https://flagcdn.com/us.svg'" alt="flag" />
+            </q-avatar>
+            <q-tooltip>{{ $t('header.language') }}</q-tooltip>
+            <q-menu>
+              <q-list>
+                <q-item clickable v-close-popup @click="setLocale('es')">
+                  <q-item-section avatar><img src="https://flagcdn.com/ec.svg" width="24" /></q-item-section>
+                  <q-item-section>Español</q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="setLocale('en')">
+                  <q-item-section avatar><img src="https://flagcdn.com/us.svg" width="24" /></q-item-section>
+                  <q-item-section>English</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+          <!-- Add dark mode toggle button -->
+          <q-btn
+            flat
+            dense
+            round
+            icon="brightness_6"
+            aria-label="Toggle Dark Mode"
+            @click="toggleDarkMode"
+          >
+            <q-tooltip>{{ $t('header.dark_mode') }}</q-tooltip>
+          </q-btn>
         </div>
-        <!-- Language selector -->
-        <q-btn flat round dense>
-          <q-avatar size="26px">
-            <img :src="currentLocale === 'es' ? 'https://flagcdn.com/ec.svg' : 'https://flagcdn.com/us.svg'" alt="flag" />
-          </q-avatar>
-          <q-menu>
-            <q-list>
-              <q-item clickable v-close-popup @click="setLocale('es')">
-                <q-item-section avatar><img src="https://flagcdn.com/ec.svg" width="24" /></q-item-section>
-                <q-item-section>Español</q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup @click="setLocale('en')">
-                <q-item-section avatar><img src="https://flagcdn.com/us.svg" width="24" /></q-item-section>
-                <q-item-section>English</q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
-        </q-btn>
-        <!-- Add dark mode toggle button -->
-        <q-btn
-          flat
-          dense
-          round
-          icon="brightness_6"
-          aria-label="Toggle Dark Mode"
-          @click="toggleDarkMode"
-        />
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
     >
       <q-list>
-        <q-item-label header>
-          Essential Links
-        </q-item-label>
-
         <template v-for="link in filteredLinksList" :key="link.title">
           <q-expansion-item
             v-if="link.children && link.children.length"
@@ -158,5 +171,39 @@ function setLocale(locale) {
   i18n.global.locale.value = locale
   localStorage.setItem('locale', locale)
 }
+
+// Obtener datos de usuario desde localStorage
+const userProfile = computed(() => {
+  try {
+    const data = localStorage.getItem('authProfile')
+    if (!data) return null
+    const parsed = JSON.parse(data)
+    return parsed.data || null
+  } catch {
+    return null
+  }
+})
+
+function getInitials(name) {
+  if (!name) return ''
+  const parts = name.trim().split(' ')
+  if (parts.length === 1) return parts[0][0].toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+}
+
+const appVersion = import.meta.env.PACKAGE_VERSION
 </script>
+
+<style scoped>
+.user-avatar {
+  border: 2px solid #1976d2;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #1976d2;
+  font-weight: bold;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
 

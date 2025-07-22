@@ -131,6 +131,7 @@
     "points_full": "Puntos"
   },
   "menu": {
+    "dashboard": "Tablero",
     "configuration": "Configuración",
     "user_management": "Gestión de usuarios",
     "system_settings": "Configuración del sistema",
@@ -174,5 +175,44 @@
     "round": "Ronda",
     "date_time": "Fecha y Hora",
     "status": "Estado"
+  },
+  "users": {
+    "title": "Gestión de usuarios",
+    "id": "ID",
+    "fullname": "Nombre completo",
+    "active": "Activo",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "role": "Rol",
+    "role_id": "ID de rol",
+    "role_name": "Nombre de rol",
+    "actions": "Acciones",
+    "edit": "Editar usuario",
+    "create": "Crear usuario",
+    "update": "Actualizar usuario",
+    "reset_password": "Restablecer contraseña",
+    "new_password": "Nueva contraseña",
+    "repeat_password": "Repetir contraseña",
+    "success_create": "Usuario creado exitosamente",
+    "success_update": "Usuario actualizado exitosamente",
+    "success_reset": "Contraseña restablecida exitosamente",
+    "error": "Error al procesar la solicitud de usuario"
+  },
+  "header": {
+    "menu": "Abrir menú",
+    "version": "Versión de la app",
+    "user": "Opciones de usuario",
+    "language": "Cambiar idioma",
+    "dark_mode": "Alternar modo oscuro"
+  },
+  "dashboard": {
+    "summary": "Resumen",
+    "total_matches": "Partidos jugados",
+    "total_goals": "Goles totales",
+    "total_wins": "Victorias totales",
+    "total_draws": "Empates totales",
+    "total_losses": "Derrotas totales",
+    "goals_by_team": "Goles por equipo (Top 5)",
+    "no_data": "No hay datos para esta temporada"
   }
 } 

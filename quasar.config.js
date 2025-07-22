@@ -2,6 +2,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
 import { defineConfig } from '#q-app/wrappers'
+import pkg from './package.json'
 
 export default defineConfig((/* ctx */) => {
   return {
@@ -39,6 +40,9 @@ export default defineConfig((/* ctx */) => {
       target: {
         browser: [ 'es2022', 'firefox115', 'chrome115', 'safari14' ],
         node: 'node20'
+      },
+      rawDefine: {
+        'import.meta.env.PACKAGE_VERSION': JSON.stringify(pkg.version)
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'

@@ -1,5 +1,12 @@
 [
   {
+    "title": "menu.dashboard",
+    "caption": "menu.dashboard",
+    "icon": "dashboard",
+    "link": "/",
+    "key": "free"
+  },
+  {
     "title": "menu.configuration",
     "caption": "menu.configuration",
     "icon": "school",
@@ -8,7 +15,7 @@
         "title": "menu.user_management",
         "caption": "menu.user_management",
         "icon": "person",
-        "link": "https://quasar.dev/user-management",
+        "link": "/users",
         "key": "m_user_management"
       },
       {
@@ -17,15 +24,15 @@
         "icon": "settings",
         "link": "/SystemMaintenance",
         "key": "m_config"
-      },
-      {
-        "title": "menu.matches",
-        "caption": "menu.matches",
-        "icon": "sports_soccer",
-        "link": "/matches",
-        "key": "m_matches"
       }
     ]
+  },
+  {
+    "title": "menu.matches",
+    "caption": "menu.matches",
+    "icon": "sports_soccer",
+    "link": "/matches",
+    "key": "m_matches"
   },
   {
     "title": "menu.leaderboard",

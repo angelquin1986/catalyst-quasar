@@ -144,7 +144,8 @@
     "forum": "Forum",
     "twitter": "Twitter",
     "facebook": "Facebook",
-    "awesome": "Quasar Awesome"
+    "awesome": "Quasar Awesome",
+    "dashboard": "Dashboard"
   },
   "user": {
     "profile": "Profile",
@@ -174,5 +175,45 @@
     "round": "Round",
     "date_time": "Date & Time",
     "status": "Status"
+  },
+  "users": {
+    "title": "User Management",
+    "id": "ID",
+    "fullname": "Full Name",
+    "active": "Active",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "role_id": "Role ID",
+    "role_name": "Role Name",
+    "actions": "Actions",
+    "edit": "Edit User",
+    "create": "Create User",
+    "update": "Update User",
+    "reset_password": "Reset Password",
+    "new_password": "New Password",
+    "repeat_password": "Repeat Password",
+    "success_create": "User created successfully",
+    "success_update": "User updated successfully",
+    "success_reset": "Password reset successfully",
+    "error": "Error processing user request"
+  },
+  "header": {
+    "menu": "Open menu",
+    "version": "App version",
+    "user": "User options",
+    "language": "Change language",
+    "dark_mode": "Toggle dark mode"
+  },
+  "dashboard": {
+    "summary": "Summary",
+    "total_matches": "Total matches",
+    "total_goals": "Total goals",
+    "total_wins": "Total wins",
+    "total_draws": "Total draws",
+    "total_losses": "Total losses",
+    "goals_by_team": "Goals by team (Top 5)",
+    "dashboard": "Dashboard",
+    "no_data": "No data for this season"
   }
 } 

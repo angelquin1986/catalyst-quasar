@@ -43,13 +43,21 @@ export const UserService = {
     return JSON.parse(data).data.role.id
   },
 
+  async getRoles() {
+    const token = localStorage.getItem('authToken');
+    const response = await axios.get(`${AUTH_API_BASE_URL}/roles`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
   async validateMenu(menu) {
     let actionList = null;
     const role = (await this.getUserRol()).toLowerCase();
     if(role!== 'admin') { actionList = await this.getRoleActions();}
 
     const validateItem = (item) => {
-      if(role === 'admin') {
+      if(role === 'admin' || item.key === 'free') {
         item.visible = true; // Admin role has access to all items
         return;
       }
@@ -72,5 +80,44 @@ export const UserService = {
     });
 
     return menu;
+  },
+
+  async getAllUsers() {
+
+    const token = localStorage.getItem('authToken');
+    const response = await axios.get(`${AUTH_API_BASE_URL}/users`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  async updateUser({ id, fullname, active, email, role_id }) {
+    const token = localStorage.getItem('authToken');
+    const response = await axios.put(`${AUTH_API_BASE_URL}/users/${id}`, {
+      fullname, active, email, role_id
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  async createUser({ email, fullname, password, role_id, company_id }) {
+    const token = localStorage.getItem('authToken');
+    const response = await axios.post(`${AUTH_API_BASE_URL}/users`, {
+      email, fullname, password, role_id, company_id
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  async resetPassword({ email, password, repeat_password }) {
+    const token = localStorage.getItem('authToken');
+    const response = await axios.post(`${AUTH_API_BASE_URL}/reset/pwd`, {
+      email, password, repeat_password
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
   }
 }

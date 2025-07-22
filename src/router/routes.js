@@ -10,7 +10,8 @@ const routes = [
       { path: '/calendar', component: () => import('pages/calendar/CalendarPage.vue') },
       { path: '/teams', component: () => import('pages/teams/TeamsPage.vue') },
       { path: '/teams/:teamId/players', component: () => import('pages/teams/TeamPlayersPage.vue') },
-      { path: '/users', component: () => import('pages/users/UsersAdminPage.vue') }
+      { path: '/users', component: () => import('pages/users/UsersAdminPage.vue') },
+      { path: '/about', component: () => import('pages/AboutMe.vue') }
     ]
   },
 

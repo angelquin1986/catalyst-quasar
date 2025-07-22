@@ -110,8 +110,8 @@
               <q-separator />
               <q-card-actions align="around">
                 <q-btn v-if="showNone" flat round icon="edit" @click="openEditMatchDialog(props.row)" />
-                <q-btn v-if="showNone" flat round icon="delete" @click="confirmDeleteMatch(props.row)" />
-                <q-btn v-if="props.row.status === 'scheduled' && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
+                <q-btn v-if="showNone ||props.row.status === 'scheduled'" dense round flat icon="delete" @click="confirmDeleteMatch(props.row)" />
+                <q-btn v-if="(props.row.status === 'scheduled' || props.row.status === 'in_progress') && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
                   <q-tooltip>{{$t('matches.register_result')}}</q-tooltip>
                 </q-btn>
               </q-card-actions>
@@ -161,7 +161,7 @@
             <q-td key="actions" :props="props">
               <q-btn v-if="showNone" dense round flat icon="edit" @click="openEditMatchDialog(props.row)"></q-btn>
               <q-btn v-if="showNone ||props.row.status === 'scheduled'" dense round flat icon="delete" @click="confirmDeleteMatch(props.row)"></q-btn>
-              <q-btn v-if="props.row.status === 'scheduled' && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
+              <q-btn v-if="(props.row.status === 'scheduled' || props.row.status === 'in_progress') && canRegisterMatch" dense round flat icon="scoreboard" @click="openRegisterResultDialog(props.row)">
                 <q-tooltip>{{$t('matches.register_result')}}</q-tooltip>
               </q-btn>
             </q-td>
@@ -252,23 +252,20 @@
               <div class="col-6">
                 <q-select
                   v-model="matchForm.home_team_id"
-                  :options="filteredHomeTeams"
+                  :options="teamsBySeason"
                   :label="$t('matches.home_team')"
                   option-value="id"
                   option-label="name"
                   emit-value
                   map-options
                   filled
+                  :disable="!matchForm.season_id || loadingTeams"
                   use-input
-                  input-debounce="0"
-                  @filter="filterHomeTeams"
-                  lazy-rules
-                  :rules="[val => !!val || $t('validation.home_team_required')]"
                 >
                   <template v-slot:no-option>
                     <q-item>
                       <q-item-section class="text-grey">
-                        {{$t('matches.no_results')}}
+                        {{ !matchForm.season_id ? $t('matches.select_season_first') : $t('matches.no_results') }}
                       </q-item-section>
                     </q-item>
                   </template>
@@ -277,26 +274,20 @@
               <div class="col-6">
                 <q-select
                   v-model="matchForm.away_team_id"
-                  :options="filteredAwayTeams"
+                  :options="teamsBySeason"
                   :label="$t('matches.away_team')"
                   option-value="id"
                   option-label="name"
                   emit-value
                   map-options
                   filled
+                  :disable="!matchForm.season_id || loadingTeams"
                   use-input
-                  input-debounce="0"
-                  @filter="filterAwayTeams"
-                  lazy-rules
-                  :rules="[
-                    val => !!val || $t('validation.away_team_required'),
-                    val => val !== matchForm.home_team_id || $t('matches.away_team_different')
-                  ]"
                 >
                   <template v-slot:no-option>
                     <q-item>
                       <q-item-section class="text-grey">
-                        {{$t('matches.no_results')}}
+                        {{ !matchForm.season_id ? $t('matches.select_season_first') : $t('matches.no_results') }}
                       </q-item-section>
                     </q-item>
                   </template>
@@ -386,23 +377,20 @@
                   <div class="col-8">
                     <q-select
                       v-model="matchForm.home_team_id"
-                      :options="filteredHomeTeams"
+                      :options="teamsBySeason"
                       :label="$t('matches.home_team')"
                       option-value="id"
                       option-label="name"
                       emit-value
                       map-options
                       filled
+                      :disable="!matchForm.season_id || loadingTeams"
                       use-input
-                      input-debounce="0"
-                      @filter="filterHomeTeams"
-                      lazy-rules
-                      :rules="[val => !!val || $t('validation.home_team_required')]"
                     >
                       <template v-slot:no-option>
                         <q-item>
                           <q-item-section class="text-grey">
-                            {{$t('matches.no_results')}}
+                            {{ !matchForm.season_id ? $t('matches.select_season_first') : $t('matches.no_results') }}
                           </q-item-section>
                         </q-item>
                       </template>
@@ -428,23 +416,20 @@
                   <div class="col-8">
                     <q-select
                       v-model="matchForm.away_team_id"
-                      :options="filteredAwayTeams"
+                      :options="teamsBySeason"
                       :label="$t('matches.away_team')"
                       option-value="id"
                       option-label="name"
                       emit-value
                       map-options
                       filled
+                      :disable="!matchForm.season_id || loadingTeams"
                       use-input
-                      input-debounce="0"
-                      @filter="filterAwayTeams"
-                      lazy-rules
-                      :rules="[val => !!val || $t('validation.away_team_required'), val => val !== matchForm.home_team_id || $t('matches.away_team_different')]"
                     >
                       <template v-slot:no-option>
                         <q-item>
                           <q-item-section class="text-grey">
-                            {{$t('matches.no_results')}}
+                            {{ !matchForm.season_id ? $t('matches.select_season_first') : $t('matches.no_results') }}
                           </q-item-section>
                         </q-item>
                       </template>
@@ -557,7 +542,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import { MatchService } from 'src/services/MatchService'
 import { UserService } from 'src/services/UserService'
 import { useQuasar } from 'quasar'
@@ -576,9 +561,52 @@ const statusOptions = ['scheduled', 'in_progress', 'finished', 'postponed', 'can
 const teams = ref([])
 const seasons = ref()
 const stadiums = ref([])
-const filteredHomeTeams = ref([])
-const filteredAwayTeams = ref([])
 const filteredTeamsForFilter = ref([])
+const teamsBySeason = ref([])
+const loadingTeams = ref(false)
+
+const initialMatchForm = {
+  id: null,
+  home_team_id: null,
+  away_team_id: null,
+  season_id: null,
+  stadium_id: null,
+  date: format(new Date(), 'yyyy/MM/dd'),
+  hour: null,
+  home_team_score: 0,
+  away_team_score: 0,
+  home_team_points: 0,
+  away_team_points: 0,
+  round: null,
+  status: 'scheduled',
+  observation: ''
+}
+const matchForm = ref({ ...initialMatchForm })
+
+async function loadTeamsForSeason(seasonId) {
+  // NO limpiar home_team_id ni away_team_id aquí
+  teamsBySeason.value = []
+  if (!seasonId) return
+  loadingTeams.value = true
+  try {
+    const resp = await MatchService.getTeamsBySeason(seasonId)
+    teamsBySeason.value = resp.data.teams || []
+  } catch (e) {
+    $q.notify({ color: 'negative', message: t('matches.failed_load_teams')+e })
+  } finally {
+    loadingTeams.value = false
+  }
+}
+
+watch(() => matchForm.value.season_id, (seasonId) => {
+  if (!seasonId) {
+    teamsBySeason.value = []
+    matchForm.value.home_team_id = null
+    matchForm.value.away_team_id = null
+  } else {
+    loadTeamsForSeason(seasonId)
+  }
+})
 
 const pagination = ref({ rowsPerPage: 0, page: 1 }) // rowsPerPage: 0 means show all rows
 
@@ -594,25 +622,6 @@ const roundOptions = computed(() => {
   const rounds = [...new Set(matches.value.map(match => match.round))].sort((a, b) => b - a)
   return rounds.map(round => ({ label: `${t('matches.round')} ${round}`, value: round }))
 })
-
-const initialMatchForm = {
-  id: null,
-  home_team_id: null,
-  away_team_id: null,
-  season_id: null,
-  stadium_id: null,
-  date: format(new Date(), 'yyyy/MM/dd'),
-  hour: 20,
-  home_team_score: 0,
-  away_team_score: 0,
-  home_team_points: 0,
-  away_team_points: 0,
-  round: null,
-  status: 'scheduled',
-  observation: ''
-}
-
-const matchForm = ref({ ...initialMatchForm })
 
 const columns = computed(() => [
   { name: 'home_team', label: t('matches.home_team'), align: 'left', field: row => row.home_team.name, sortable: true, headerStyle: 'width: 120px;' },
@@ -801,36 +810,6 @@ const filterTeamsForFilter = (val, update) => {
   })
 }
 
-const filterHomeTeams = (val, update) => {
-  if (!val) {
-    update(() => {
-      filteredHomeTeams.value = teams.value
-    })
-    return
-  }
-  update(() => {
-    const needle = val.toLowerCase()
-    filteredHomeTeams.value = teams.value.filter(
-      team => team.name.toLowerCase().indexOf(needle) > -1
-    )
-  })
-}
-
-const filterAwayTeams = (val, update) => {
-  if (!val) {
-    update(() => {
-      filteredAwayTeams.value = teams.value
-    })
-    return
-  }
-  update(() => {
-    const needle = val.toLowerCase()
-    filteredAwayTeams.value = teams.value.filter(
-      team => team.name.toLowerCase().indexOf(needle) > -1
-    )
-  })
-}
-
 const calculatePoints = () => {
   const homeScore = matchForm.value.home_team_score
   const awayScore = matchForm.value.away_team_score
@@ -848,15 +827,15 @@ const calculatePoints = () => {
 }
 
 const resetForm = () => {
-  matchForm.value = { ...initialMatchForm, date: format(new Date(), 'yyyy/MM/dd'), hour: 20 }
+  matchForm.value = { ...initialMatchForm, date: format(new Date(), 'yyyy/MM/dd'), hour: null }
 }
 
 const openAddMatchDialog = () => {
   dialogMode.value = 'add'
   resetForm()
   matchForm.value.status = 'scheduled'
-  filteredHomeTeams.value = teams.value
-  filteredAwayTeams.value = teams.value
+  filteredTeamsForFilter.value = teams.value
+  teamsBySeason.value = [] // Limpia equipos, el usuario debe seleccionar temporada
   matchDialog.value = true
 }
 
@@ -864,19 +843,20 @@ const openAddScheduledMatchDialog = () => {
     dialogMode.value = 'schedule'
     resetForm()
     matchForm.value.status = 'scheduled'
-    filteredHomeTeams.value = teams.value
-    filteredAwayTeams.value = teams.value
+    filteredTeamsForFilter.value = teams.value
     matchDialog.value = true
 }
 
-const openEditMatchDialog = (match) => {
+const openEditMatchDialog = async (match) => {
   dialogMode.value = 'edit'
   matchForm.value = {
     ...match,
     date: format(new Date(match.date), 'yyyy/MM/dd'),
-    hour: match.hour || 20  }
-  filteredHomeTeams.value = teams.value
-  filteredAwayTeams.value = teams.value
+    hour: match.hour ?? null
+  }
+  filteredTeamsForFilter.value = teams.value
+  await nextTick() // Espera a que matchForm.value.season_id esté actualizado
+  await loadTeamsForSeason(matchForm.value.season_id)
   matchDialog.value = true
 }
 
@@ -885,7 +865,7 @@ const openRegisterResultDialog = (match) => {
   matchForm.value = {
     ...match,
     date: format(new Date(match.date), 'yyyy/MM/dd'),
-    hour: match.hour || 20,
+    hour: match.hour ?? null,
     home_team_score: null,
     away_team_score: null,
     observation: ''

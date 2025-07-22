@@ -145,7 +145,8 @@
     "twitter": "Twitter",
     "facebook": "Facebook",
     "awesome": "Quasar Awesome",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "about_me": "About Me"
   },
   "user": {
     "profile": "Profile",

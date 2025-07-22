@@ -54,5 +54,9 @@ export const MatchService = {
 
   getStadiums () {
     return apiClient.get('/stadiums')
+  },
+
+  getTeamsBySeason (seasonId) {
+    return apiClient.get(`/seasons/${seasonId}/teams`)
   }
 } 

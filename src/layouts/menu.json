@@ -56,13 +56,6 @@
     "key": "m_calendar"
   },
   {
-    "title": "menu.products",
-    "caption": "menu.products",
-    "icon": "code",
-    "link": "https://github.com/quasarframework",
-    "key": "m_products"
-  },
-  {
     "title": "menu.leagues",
     "caption": "menu.leagues",
     "icon": "sports_soccer",
@@ -70,33 +63,10 @@
     "key": "m_league"
   },
   {
-    "title": "menu.discord",
-    "caption": "menu.discord",
-    "icon": "chat",
-    "link": "https://chat.quasar.dev"
-  },
-  {
-    "title": "menu.forum",
-    "caption": "menu.forum",
-    "icon": "record_voice_over",
-    "link": "https://forum.quasar.dev"
-  },
-  {
-    "title": "menu.twitter",
-    "caption": "menu.twitter",
-    "icon": "rss_feed",
-    "link": "https://twitter.quasar.dev"
-  },
-  {
-    "title": "menu.facebook",
-    "caption": "menu.facebook",
-    "icon": "public",
-    "link": "https://facebook.quasar.dev"
-  },
-  {
-    "title": "menu.awesome",
-    "caption": "menu.awesome",
-    "icon": "favorite",
-    "link": "https://awesome.quasar.dev"
+    "title": "menu.about_me",
+    "caption": "menu.about_me",
+    "icon": "info",
+    "link": "/about",
+    "key": "free"
   }
 ]

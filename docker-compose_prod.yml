@@ -4,7 +4,7 @@ services:
     build: .
     container_name: catalyst-soccer-front
     ports:
-      - "9091:9091"
+      - "9091:80"
     env_file:
       - .env
     restart: unless-stopped 

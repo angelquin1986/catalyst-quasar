@@ -1,11 +1,9 @@
-# Dockerfile para Quasar/Vite frontend robusto
+# Dockerfile para Quasar/Vite frontend robusto y compatible con scripts postinstall
 FROM node:20-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-# Instala dependencias nativas para node-gyp y paquetes nativos
+COPY . .
 RUN apk add --no-cache python3 make g++ \
     && npm install
-COPY . .
 COPY .env* ./
 RUN npm run build
 

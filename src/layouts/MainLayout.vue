@@ -136,7 +136,7 @@ const filteredLinksList = ref([])
 
 onMounted(async () => {
   try {
-    const response = await fetch('/src/layouts/menu.json')
+    const response = await fetch('/menu.json')
     let links = await response.json()
     if (localStorage.getItem('authProfile')) {
       links = await UserService.validateMenu(links)

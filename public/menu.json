@@ -1,0 +1,72 @@
+[
+  {
+    "title": "menu.dashboard",
+    "caption": "menu.dashboard",
+    "icon": "dashboard",
+    "link": "/",
+    "key": "free"
+  },
+  {
+    "title": "menu.configuration",
+    "caption": "menu.configuration",
+    "icon": "school",
+    "children": [
+      {
+        "title": "menu.user_management",
+        "caption": "menu.user_management",
+        "icon": "person",
+        "link": "/users",
+        "key": "m_user_management"
+      },
+      {
+        "title": "menu.system_settings",
+        "caption": "menu.system_settings",
+        "icon": "settings",
+        "link": "/SystemMaintenance",
+        "key": "m_config"
+      }
+    ]
+  },
+  {
+    "title": "menu.matches",
+    "caption": "menu.matches",
+    "icon": "sports_soccer",
+    "link": "/matches",
+    "key": "m_matches"
+  },
+  {
+    "title": "menu.leaderboard",
+    "caption": "menu.leaderboard",
+    "icon": "leaderboard",
+    "link": "/leaderboard",
+    "key": "m_leaderboard"
+  },
+      {
+        "title": "menu.teams",
+        "caption": "menu.teams",
+        "icon": "sports_soccer",
+        "link": "/teams",
+        "key": "m_teams"
+      },
+  {
+    "title": "menu.calendar",
+    "caption": "menu.calendar",
+    "icon": "event",
+    "link": "/calendar",
+    "key": "m_calendar"
+  },
+  {
+    "title": "menu.leagues",
+    "caption": "menu.leagues",
+    "icon": "sports_soccer",
+    "link": "https://github.com/quasarframework",
+    "key": "m_league"
+  },
+  {
+    "title": "menu.about_me",
+    "caption": "menu.about_me",
+    "icon": "info",
+    "link": "/about",
+    "key": "free"
+  }
+] 

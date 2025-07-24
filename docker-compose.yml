@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  frontend:
+    build: .
+    container_name: catalyst-soccer-front
+    ports:
+      - "9091:9091"
+    env_file:
+      - .env
+    restart: unless-stopped 
+    networks:
+      - aq_files_mynet
+
+networks:
+  aq_files_mynet:
+    external: true

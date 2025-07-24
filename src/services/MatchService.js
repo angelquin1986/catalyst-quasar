@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://192.168.100.91:8082/api/v1'
+const API_URL = import.meta.env.VITE_API_BASE_URL+'/api/v1'
 
 const apiClient = axios.create({
   baseURL: API_URL,
